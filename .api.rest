@@ -1,0 +1,51 @@
+@baseUrl = https://linkup-eta.vercel.app/api
+
+@authToken = {{login.response.body.token}}
+
+### Login
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "password123"
+}
+
+### Submit application
+POST {{baseUrl}}/apply
+Content-Type: application/json
+
+{
+  "firstName": "turca",
+  "lastName": "said",
+  "email": "said@gmail.com",
+  "password": "securepassword123",
+  "linkedinProfile": "https://www.linkedin.com/in/johndoe",
+  "startupName": "TechInnovate",
+  "shortDescription": "AI-powered sustainability solutions",
+  "problemSolved": "We're addressing climate change through innovative AI technologies.",
+  "sector": "CleanTech",
+  "stage": "mvp",
+  "hasInvestment": false,
+  "seekingInvestment": true,
+  "hasCustomers": false,
+  "customersDetails": "",
+  "links": "https://techinnovate.com",
+  "founderContact": "John Doe, johndoe@techinnovate.com",
+  "whyJoinLinkUp": "We believe LinkUp can provide the mentorship and resources we need to scale our impact.",
+  "howHeardAboutLinkUp": "Through a recommendation from a fellow entrepreneur."
+}
+
+### Get all applications (Admin only)
+GET {{baseUrl}}/admin/applications
+Authorization: Bearer {{authToken}}
+
+### Update application status (Admin only)
+PUT {{baseUrl}}/admin/applications/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "status": "accepted"
+}
