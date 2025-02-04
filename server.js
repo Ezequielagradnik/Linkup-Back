@@ -10,12 +10,10 @@ const app = express()
 
 console.log("Starting server initialization")
 
-// Mejorado el manejo de CORS para incluir múltiples orígenes
-const allowedOrigins = [
-  'https://linkup-eta.vercel.app',
-  'http://localhost:3000',
-  process.env.CORS_ORIGIN
-].filter(Boolean)
+// Improved CORS handling to include multiple origins
+const allowedOrigins = ["https://linkup-eta.vercel.app", "http://localhost:3000", process.env.CORS_ORIGIN].filter(
+  Boolean,
+)
 
 app.use(
   cors({
@@ -23,7 +21,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true)
       } else {
-        callback(new Error('Not allowed by CORS'))
+        callback(new Error("Not allowed by CORS"))
       }
     },
     credentials: true,
@@ -34,7 +32,7 @@ console.log("CORS configured with allowed origins:", allowedOrigins)
 app.use(express.json())
 console.log("JSON body parser middleware configured")
 
-// Middleware de debug mejorado
+// Improved debug middleware
 app.use((req, res, next) => {
   const timestamp = new Date().toISOString()
   console.log(`[${timestamp}] ${req.method} ${req.originalUrl}`)
@@ -49,11 +47,11 @@ console.log("Debug middleware configured")
 // Health check route
 app.get("/", (req, res) => {
   console.log("Health check route accessed")
-  res.json({ 
-    status: "ok", 
+  res.json({
+    status: "ok",
     message: "LinkUp API is running",
     environment: process.env.NODE_ENV,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   })
 })
 
@@ -65,7 +63,7 @@ app.use("/api/apply", applicationRoutes)
 app.use("/api/admin", adminRoutes)
 console.log("Routes mounted successfully")
 
-// 404 handler mejorado
+// Improved 404 handler
 app.use((req, res) => {
   console.log(`404: ${req.method} ${req.originalUrl} not found`)
   res.status(404).json({
@@ -76,22 +74,22 @@ app.use((req, res) => {
       "POST /api/apply",
       "GET /api/admin/applications",
       "POST /api/auth/login",
-      "GET /api/users/profile"
-    ]
+      "GET /api/users/profile",
+    ],
   })
 })
 
-// Error handler mejorado
+// Improved error handler
 app.use((err, req, res, next) => {
   console.error("Global error handler caught an error:")
   console.error("Error name:", err.name)
   console.error("Error message:", err.message)
   console.error("Stack trace:", err.stack)
-  
-  res.status(500).json({
+
+  res.status(err.status || 500).json({
     error: err.message,
     type: err.name,
-    stack: process.env.NODE_ENV === "development" ? err.stack : undefined
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
   })
 })
 
@@ -107,7 +105,7 @@ async function startServer() {
     await sequelize.sync()
     console.log("Database synchronized successfully")
 
-    // Manejo mejorado de puerto para desarrollo local
+    // Improved port handling for local development
     const server = app.listen(PORT, () => {
       const actualPort = server.address().port
       console.log(`Server running on port ${actualPort}`)
@@ -119,12 +117,12 @@ async function startServer() {
       console.log("- GET /api/users/profile")
     })
 
-    server.on('error', (error) => {
-      if (error.code === 'EADDRINUSE') {
+    server.on("error", (error) => {
+      if (error.code === "EADDRINUSE") {
         console.log(`Port ${PORT} is busy, trying ${PORT + 1}...`)
         server.listen(PORT + 1)
       } else {
-        console.error('Server error:', error)
+        console.error("Server error:", error)
       }
     })
   } catch (error) {
@@ -134,12 +132,15 @@ async function startServer() {
   }
 }
 
-// Inicio condicional del servidor
+// Conditional server start
 if (process.env.NODE_ENV !== "production") {
   console.log("Starting server in development mode...")
   startServer()
 } else {
   console.log("Server initialized for production mode")
+  // In production, we might want to start the server as well
+  startServer()
 }
 
 export default app
+

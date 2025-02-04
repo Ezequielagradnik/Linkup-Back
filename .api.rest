@@ -19,7 +19,7 @@ Content-Type: application/json
 {
   "firstName": "turca",
   "lastName": "said",
-  "email": "said@gmail.com",
+  "email": "h@gmail.com",
   "password": "securepassword123",
   "linkedinProfile": "https://www.linkedin.com/in/johndoe",
   "startupName": "TechInnovate",
