@@ -1,6 +1,6 @@
 @baseUrl = https://linkup-eta.vercel.app/api
 
-@authToken = {{login.response.body.token}}
+@authToken = {{login.response.body}}
 
 ### Login
 # @name login
