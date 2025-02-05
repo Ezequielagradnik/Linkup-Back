@@ -5,36 +5,43 @@ import { Application } from "../models/index.js"
 
 const router = express.Router()
 
-// Admin login
+// Admin login route
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body
+  try {
+    const { email, password } = req.body
 
-  const adminEmail = process.env.ADMIN_EMAIL || "linkup.startups@gmail.com"
-  const adminPassword = process.env.ADMIN_PASSWORD || "cotur2025"
+    // Check if credentials match admin user
+    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+      // Generate JWT token with admin flag
+      const token = jwt.sign(
+        {
+          userId: "admin",
+          email: email,
+          isAdmin: true,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" },
+      )
 
-  if (email !== adminEmail || password !== adminPassword) {
-    console.log(`Failed login attempt for email: ${email}`)
-    return res.status(400).json({ message: "Invalid credentials" })
+      return res.json({ token })
+    }
+
+    return res.status(401).json({ message: "Invalid admin credentials" })
+  } catch (error) {
+    console.error("Admin login error:", error)
+    res.status(500).json({ message: "Error during admin login", error: error.message })
   }
-
-  const token = jwt.sign({ email: adminEmail, isAdmin: true }, process.env.JWT_SECRET, { expiresIn: "1h" })
-
-  console.log(`Admin login successful for email: ${email}`)
-  res.json({ token })
 })
 
 // Get all applications
 router.get("/applications", authenticateToken, async (req, res) => {
-  if (!req.user || !req.user.isAdmin) {
-    console.log(`Unauthorized access attempt to applications list. User: ${req.user ? req.user.email : "Unknown"}`)
-    return res.status(403).json({ message: "Access denied" })
-  }
-
   try {
-    const applications = await Application.findAll({
-      order: [["createdAt", "DESC"]],
-    })
-    console.log(`Successfully fetched ${applications.length} applications`)
+    if (!req.user || !req.user.isAdmin) {
+      console.log(`Unauthorized access attempt to fetch applications. User: ${req.user ? req.user.email : "Unknown"}`)
+      return res.status(403).json({ message: "Access denied" })
+    }
+
+    const applications = await Application.findAll()
     res.json(applications)
   } catch (error) {
     console.error("Error fetching applications:", error)

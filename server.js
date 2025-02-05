@@ -2,7 +2,6 @@ import express from "express"
 import cors from "cors"
 import { sequelize } from "./models/index.js"
 import authRoutes from "./routes/auth.js"
-import userRoutes from "./routes/user.js"
 import applicationRoutes from "./routes/apply.js"
 import adminRoutes from "./routes/admin.js"
 
@@ -57,10 +56,9 @@ app.get("/", (req, res) => {
 
 // Mounting routes with better error handling
 console.log("Mounting routes...")
-app.use("/api/admin/login", adminRoutes)
 app.use("/api/login", authRoutes)
 app.use("/api/apply", applicationRoutes)
-app.use("/api/admin/applications", adminRoutes)
+app.use("/api/admin", adminRoutes)
 console.log("Routes mounted successfully")
 
 // Improved 404 handler
@@ -74,7 +72,8 @@ app.use((req, res) => {
       "POST /api/apply",
       "GET /api/admin/applications",
       "POST /api/login",
-       "PUT /api/admin/applications/:id",
+      "GET /api/users/profile",
+      "PUT /api/admin/applications/:id",
     ],
   })
 })
@@ -113,8 +112,9 @@ async function startServer() {
       console.log("Available routes:")
       console.log("- POST /api/apply")
       console.log("- GET /api/admin/applications")
-      console.log("- POST /api/auth/login")
+      console.log("- POST /api/login")
       console.log("- GET /api/users/profile")
+      console.log("- PUT /api/admin/applications/:id")
     })
 
     server.on("error", (error) => {
