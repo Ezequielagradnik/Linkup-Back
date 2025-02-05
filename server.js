@@ -57,10 +57,10 @@ app.get("/", (req, res) => {
 
 // Mounting routes with better error handling
 console.log("Mounting routes...")
-app.use("/api/auth", authRoutes)
-app.use("/api/users", userRoutes)
+app.use("/api/admin/login", authRoutes)
+app.use("/api/login", userRoutes)
 app.use("/api/apply", applicationRoutes)
-app.use("/api/admin", adminRoutes)
+app.use("/api/admin/applications", adminRoutes)
 console.log("Routes mounted successfully")
 
 // Improved 404 handler
@@ -73,8 +73,8 @@ app.use((req, res) => {
     availableRoutes: [
       "POST /api/apply",
       "GET /api/admin/applications",
-      "POST /api/auth/login",
-      "GET /api/users/profile",
+      "POST /api/login",
+       "PUT /api/admin/applications/:id",
     ],
   })
 })
