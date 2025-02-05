@@ -57,8 +57,8 @@ app.get("/", (req, res) => {
 
 // Mounting routes with better error handling
 console.log("Mounting routes...")
-app.use("/api/admin/login", authRoutes)
-app.use("/api/login", userRoutes)
+app.use("/api/admin/login", adminRoutes)
+app.use("/api/login", authRoutes)
 app.use("/api/apply", applicationRoutes)
 app.use("/api/admin/applications", adminRoutes)
 console.log("Routes mounted successfully")
