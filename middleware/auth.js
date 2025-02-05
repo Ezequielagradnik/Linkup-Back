@@ -11,7 +11,17 @@ export const authenticateToken = async (req, res, next) => {
       return res.sendStatus(401)
     }
 
+    console.log("Verifying token:", token) // Log the token being verified
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    console.log("Decoded token:", decoded) // Log the decoded token
+
+    if (decoded.isAdmin) {
+      req.user = { ...decoded, isAdmin: true }
+      console.log("Admin user authenticated:", req.user)
+      return next()
+    }
+
     const user = await User.findByPk(decoded.userId)
 
     if (!user) {
@@ -20,6 +30,7 @@ export const authenticateToken = async (req, res, next) => {
     }
 
     req.user = user
+    console.log("User authenticated:", req.user)
     next()
   } catch (error) {
     console.error("Error in authentication middleware:", error)
@@ -27,4 +38,3 @@ export const authenticateToken = async (req, res, next) => {
   }
 }
 
-export default authenticateToken
