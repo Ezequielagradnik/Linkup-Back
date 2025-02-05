@@ -8,8 +8,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "testuser@example.com",
-  "password": "password123"
+  "email": "linkup.startups@gmail.com",
+  "password": "cotur2025"
 }
 
 ### Submit application
