@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename)
 dotenv.config({ path: path.join(__dirname, "../.env") })
 
 console.log("Environment variables after loading:")
-console.log("DATABASE_URL:", process.env.DATABASE_URL)
+console.log("DATABASE_URL:", process.env.DATABASE_URL ? "[REDACTED]" : "undefined")
 console.log("DB_HOST:", process.env.DB_HOST)
 console.log("DB_PORT:", process.env.DB_PORT)
 console.log("DB_NAME:", process.env.DB_NAME)
@@ -31,12 +31,6 @@ if (process.env.DATABASE_URL) {
       },
     },
     logging: (msg) => console.log("Sequelize log:", msg),
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000,
-    },
   })
 } else {
   console.error(
@@ -65,12 +59,6 @@ if (process.env.DATABASE_URL) {
       },
     },
     logging: (msg) => console.log("Sequelize log:", msg),
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000,
-    },
   })
 }
 

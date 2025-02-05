@@ -10,11 +10,11 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body
 
-    console.log("Admin login attempt:", email) // Log the login attempt
+    console.log("Admin login attempt:", email)
+    console.log("Expected admin email:", process.env.ADMIN_EMAIL)
+    console.log("Expected admin password:", process.env.ADMIN_PASSWORD ? "[REDACTED]" : "undefined")
 
-    // Check if credentials match admin user
     if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-      // Generate JWT token with admin flag
       const token = jwt.sign(
         {
           userId: "admin",
@@ -25,11 +25,11 @@ router.post("/login", async (req, res) => {
         { expiresIn: "1h" },
       )
 
-      console.log("Admin login successful") // Log successful login
+      console.log("Admin login successful")
       return res.json({ token })
     }
 
-    console.log("Invalid admin credentials") // Log failed login attempt
+    console.log("Invalid admin credentials")
     return res.status(401).json({ message: "Invalid admin credentials" })
   } catch (error) {
     console.error("Admin login error:", error)
@@ -40,19 +40,20 @@ router.post("/login", async (req, res) => {
 // Get all applications
 router.get("/applications", authenticateToken, async (req, res) => {
   try {
-    console.log("Fetching applications. User:", req.user) // Log the user making the request
+    console.log("Fetching applications. User:", req.user)
 
     if (!req.user || !req.user.isAdmin) {
       console.log(`Unauthorized access attempt to fetch applications. User: ${req.user ? req.user.email : "Unknown"}`)
       return res.status(403).json({ message: "Access denied" })
     }
 
+    console.log("Attempting to fetch applications from database")
     const applications = await Application.findAll()
-    console.log(`Successfully fetched ${applications.length} applications`) // Log the number of applications fetched
+    console.log(`Successfully fetched ${applications.length} applications`)
     res.json(applications)
   } catch (error) {
     console.error("Error fetching applications:", error)
-    res.status(500).json({ message: "Error fetching applications", error: error.message })
+    res.status(500).json({ message: "Error fetching applications", error: error.message, stack: error.stack })
   }
 })
 
