@@ -1,6 +1,6 @@
 @baseUrl = https://linkup-eta.vercel.app/api
 
-
+http://localhost:3000
 ### Admin Login
 # @name adminLogin
 POST {{baseUrl}}/admin/login

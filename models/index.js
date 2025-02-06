@@ -20,46 +20,52 @@ console.log("DB_PASSWORD:", process.env.DB_PASSWORD ? "[REDACTED]" : "undefined"
 
 let sequelize
 
-if (process.env.DATABASE_URL) {
-  console.log("Initializing Sequelize with DATABASE_URL")
-  sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: "postgres",
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
+try {
+  if (process.env.DATABASE_URL) {
+    console.log("Initializing Sequelize with DATABASE_URL")
+    sequelize = new Sequelize(process.env.DATABASE_URL, {
+      dialect: "postgres",
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false,
+        },
       },
-    },
-    logging: (msg) => console.log("Sequelize log:", msg),
-  })
-} else {
-  console.error(
-    "DATABASE_URL is not defined in the environment variables. Attempting to use individual connection parameters.",
-  )
+      logging: (msg) => console.log("Sequelize log:", msg),
+    })
+  } else {
+    console.error(
+      "DATABASE_URL is not defined in the environment variables. Attempting to use individual connection parameters.",
+    )
 
-  if (
-    !process.env.DB_NAME ||
-    !process.env.DB_USER ||
-    !process.env.DB_PASSWORD ||
-    !process.env.DB_HOST ||
-    !process.env.DB_PORT
-  ) {
-    console.error("Missing required database connection parameters.")
-    process.exit(1)
+    if (
+      !process.env.DB_NAME ||
+      !process.env.DB_USER ||
+      !process.env.DB_PASSWORD ||
+      !process.env.DB_HOST ||
+      !process.env.DB_PORT
+    ) {
+      throw new Error("Missing required database connection parameters.")
+    }
+
+    sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      dialect: "postgres",
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false,
+        },
+      },
+      logging: (msg) => console.log("Sequelize log:", msg),
+    })
   }
 
-  sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: "postgres",
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
-    logging: (msg) => console.log("Sequelize log:", msg),
-  })
+  console.log("Sequelize initialized successfully")
+} catch (error) {
+  console.error("Failed to initialize Sequelize:", error)
+  process.exit(1)
 }
 
 const User = UserModel(sequelize, Sequelize)

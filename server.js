@@ -59,6 +59,7 @@ console.log("Mounting routes...")
 app.use("/api/login", authRoutes)
 app.use("/api/apply", applicationRoutes)
 app.use("/api/admin", adminRoutes)
+
 console.log("Routes mounted successfully")
 
 // Improved 404 handler
@@ -113,6 +114,7 @@ async function startServer() {
       console.log("- POST /api/apply")
       console.log("- GET /api/admin/applications")
       console.log("- POST /api/login")
+      console.log("- POST /api/admin/login")
       console.log("- GET /api/users/profile")
       console.log("- PUT /api/admin/applications/:id")
     })
