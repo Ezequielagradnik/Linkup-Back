@@ -14,7 +14,21 @@ router.post("/login", async (req, res) => {
     console.log("Expected admin email:", process.env.ADMIN_EMAIL)
     console.log("Expected admin password:", process.env.ADMIN_PASSWORD ? "[REDACTED]" : "undefined")
 
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" })
+    }
+
+    if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+      console.error("Admin credentials are not set in environment variables")
+      return res.status(500).json({ message: "Server configuration error" })
+    }
+
     if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+      if (!process.env.JWT_SECRET) {
+        console.error("JWT_SECRET is not set in environment variables")
+        return res.status(500).json({ message: "Server configuration error" })
+      }
+
       const token = jwt.sign(
         {
           userId: "admin",
@@ -33,7 +47,7 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Invalid admin credentials" })
   } catch (error) {
     console.error("Admin login error:", error)
-    res.status(500).json({ message: "Error during admin login", error: error.message })
+    res.status(500).json({ message: "Error during admin login", error: error.message, stack: error.stack })
   }
 })
 
