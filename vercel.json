@@ -4,7 +4,10 @@
       {
         "src": "server.js",
         "use": "@vercel/node",
-        "config": { "includeFiles": ["models/**", ".env"] }
+        "config": {
+          "includeFiles": ["models/**", ".env"],
+          "installCommand": "npm ci"
+        }
       }
     ],
     "routes": [
