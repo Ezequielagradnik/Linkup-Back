@@ -47,7 +47,7 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Invalid admin credentials" })
   } catch (error) {
     console.error("Admin login error:", error)
-    res.status(500).json({ message: "Error during admin login", error: error.message, stack: error.stack })
+    res.status(500).json({ message: "Error during admin login", error: error.message })
   }
 })
 
