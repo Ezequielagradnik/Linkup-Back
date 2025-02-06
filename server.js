@@ -4,6 +4,7 @@ import { sequelize } from "./models/index.js"
 import authRoutes from "./routes/auth.js"
 import applicationRoutes from "./routes/apply.js"
 import adminRoutes from "./routes/admin.js"
+import dashboardRoutes from "./routes/dashboard.js"
 
 const app = express()
 
@@ -59,7 +60,7 @@ console.log("Mounting routes...")
 app.use("/api/login", authRoutes)
 app.use("/api/apply", applicationRoutes)
 app.use("/api/admin", adminRoutes)
-
+app.use("/api/dashboard", dashboardRoutes)
 console.log("Routes mounted successfully")
 
 // Improved 404 handler
@@ -75,6 +76,9 @@ app.use((req, res) => {
       "POST /api/login",
       "GET /api/users/profile",
       "PUT /api/admin/applications/:id",
+      "GET /api/dashboard",
+      "POST /api/dashboard/update-progress"
+
     ],
   })
 })
@@ -117,6 +121,8 @@ async function startServer() {
       console.log("- POST /api/admin/login")
       console.log("- GET /api/users/profile")
       console.log("- PUT /api/admin/applications/:id")
+      console.log("- GET /api/dashboard")
+      console.log("- POST /api/dashboard/update-progress")
     })
 
     server.on("error", (error) => {
