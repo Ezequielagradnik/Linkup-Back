@@ -4,6 +4,8 @@ import ApplicationModel from "./application.js"
 import dotenv from "dotenv"
 import path from "path"
 import { fileURLToPath } from "url"
+import ModuleModel from "./module.js"
+import UserProgressModel from "./userProgress.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -85,8 +87,12 @@ const User = UserModel(sequelize, Sequelize)
 console.log("User model initialized")
 const Application = ApplicationModel(sequelize, Sequelize)
 console.log("Application model initialized")
+const Module = ModuleModel(sequelize, Sequelize)
+console.log("Module model initialized")
+const UserProgress = UserProgressModel(sequelize, Sequelize)
+console.log("UserProgress model initialized")
 
 console.log("All models initialized successfully")
 
-export { sequelize, User, Application }
+export { sequelize, User, Application, Module, UserProgress }
 
