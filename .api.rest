@@ -37,7 +37,7 @@ Content-Type: application/json
 
 ### Get all applications (Admin only)
 GET {{baseUrl}}/admin/applications
-Authorization: Bearer {{adminLogin.response.body.token}}
+
 
 ### Regular User Login
 # @name userLogin
@@ -52,7 +52,6 @@ Content-Type: application/json
 ### Update application status (Admin only)
 PUT {{baseUrl}}/admin/applications/1
 Content-Type: application/json
-Authorization: Bearer {{adminLogin.response.body.token}}
 
 {
   "status": "accepted"
