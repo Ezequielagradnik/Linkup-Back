@@ -6,7 +6,7 @@
         "use": "@vercel/node",
         "config": {
           "includeFiles": ["models/**", ".env"],
-          "installCommand": "npm ci"
+          "installCommand": "npm install --force"
         }
       }
     ],
@@ -19,7 +19,11 @@
         "src": "/(.*)",
         "dest": "server.js"
       }
-    ]
+    ],
+    "build": {
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
   }
-  
   
