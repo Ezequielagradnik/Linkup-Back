@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize");
+import { Sequelize } from "sequelize"
 import UserModel from "./user.js"
 import ApplicationModel from "./application.js"
 import dotenv from "dotenv"
