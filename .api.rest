@@ -38,15 +38,22 @@ Content-Type: application/json
 ### Get all applications (Admin only)
 GET {{baseUrl}}/admin/applications
 
+### 
+POST {{baseUrl}}/register-admin
+Content-Type: application/json
 
+{
+  "email": "linkup.startups@gmail.com",
+  "password": "cotur2025"
+}
 ### Regular User Login
 # @name userLogin
 POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "email": "testuser@example.com",
-  "password": "testuserpassword"
+  "email": "linkup.startups@gmail.com",
+  "password": "cotur2025"
 }
 
 ### Update application status (Admin only)
