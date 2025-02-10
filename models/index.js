@@ -1,14 +1,16 @@
 import { Sequelize } from "sequelize"
 import UserModel from "./user.js"
 import ApplicationModel from "./application.js"
+import ModuleModel from "./module.js"
+import UserProgressModel from "./userProgress.js"
 import dotenv from "dotenv"
 import path from "path"
 import { fileURLToPath } from "url"
-import ModuleModel from "./module.js"
-import UserProgressModel from "./userProgress.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+console.log("All required modules imported successfully")
 
 console.log("Starting to load environment variables...")
 dotenv.config({ path: path.join(__dirname, "../.env") })
@@ -79,20 +81,30 @@ try {
   console.error("Error name:", error.name)
   console.error("Error message:", error.message)
   console.error("Error stack:", error.stack)
+  console.error("Exiting process due to Sequelize initialization failure")
   process.exit(1)
 }
 
 console.log("Initializing models...")
+console.log("Initializing User model...")
 const User = UserModel(sequelize, Sequelize)
-console.log("User model initialized")
+console.log("User model initialized successfully")
+
+console.log("Initializing Application model...")
 const Application = ApplicationModel(sequelize, Sequelize)
-console.log("Application model initialized")
+console.log("Application model initialized successfully")
+
+console.log("Initializing Module model...")
 const Module = ModuleModel(sequelize, Sequelize)
-console.log("Module model initialized")
+console.log("Module model initialized successfully")
+
+console.log("Initializing UserProgress model...")
 const UserProgress = UserProgressModel(sequelize, Sequelize)
-console.log("UserProgress model initialized")
+console.log("UserProgress model initialized successfully")
 
 console.log("All models initialized successfully")
+
+console.log("Exporting initialized models and Sequelize instance")
 
 export { sequelize, User, Application, Module, UserProgress }
 
