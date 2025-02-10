@@ -20,7 +20,8 @@
         "nodemailer": "^6.10.0",
         "pg": "^8.13.1",
         "pg-hstore": "^2.3.4",
-        "sequelize": "^6.31.1"
+        "sequelize": "^6.31.1",
+        "framer-motion": "^4.1.17"
     },
     "devDependencies": {
         "nodemon": "^2.0.22"

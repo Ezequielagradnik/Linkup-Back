@@ -6,7 +6,7 @@
         "use": "@vercel/node",
         "config": {
           "includeFiles": ["models/**", ".env"],
-          "installCommand": "npm install --force"
+          "installCommand": "npm install pg && npm ci"
         }
       }
     ],
