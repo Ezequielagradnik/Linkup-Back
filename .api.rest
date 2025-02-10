@@ -38,14 +38,7 @@ Content-Type: application/json
 ### Get all applications (Admin only)
 GET {{baseUrl}}/admin/applications
 
-### Register for the only admin
-POST {{baseUrl}}/register-admin
-Content-Type: application/json
 
-{
-  "email": "linkup.startups@gmail.com",
-  "password": "cotur2025"
-}
 ### Regular User Login
 # @name userLogin
 POST {{baseUrl}}/login
