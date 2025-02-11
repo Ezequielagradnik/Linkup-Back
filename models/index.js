@@ -1,4 +1,5 @@
 import { Sequelize } from "sequelize"
+import pg from "pg" // Añadimos esta línea
 import UserModel from "./user.js"
 import ApplicationModel from "./application.js"
 import ModuleModel from "./module.js"
@@ -32,6 +33,7 @@ try {
     console.log("DATABASE_URL found. Initializing Sequelize with DATABASE_URL")
     sequelize = new Sequelize(process.env.DATABASE_URL, {
       dialect: "postgres",
+      dialectModule: pg, // Añadimos esta línea
       dialectOptions: {
         ssl: {
           require: true,
@@ -60,6 +62,7 @@ try {
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
       dialect: "postgres",
+      dialectModule: pg, // Añadimos esta línea
       dialectOptions: {
         ssl: {
           require: true,
