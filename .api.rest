@@ -1,15 +1,7 @@
 @baseUrl = https://linkup-eta.vercel.app/api
 
 http://localhost:3000
-### Admin Login
-# @name adminLogin
-POST {{baseUrl}}/admin/login
-Content-Type: application/json
 
-{
-  "email": "linkup.startups@gmail.com",
-  "password": "cotur2025"
-}
 ### Submit application
 POST {{baseUrl}}/apply
 Content-Type: application/json

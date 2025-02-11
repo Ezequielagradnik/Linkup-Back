@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs"
 import { Application, User } from "../models/index.js"
 
 const router = express.Router()
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body
@@ -34,6 +35,11 @@ router.post("/login", async (req, res) => {
 
     if (!isAdmin && user.status !== "accepted") {
       return res.status(403).json({ message: "Your application is still pending or has been rejected" })
+    }
+
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET is not set")
+      return res.status(500).json({ error: "Internal server error" })
     }
 
     const token = jwt.sign({ userId: user.id, email: user.email, isAdmin }, process.env.JWT_SECRET, {
