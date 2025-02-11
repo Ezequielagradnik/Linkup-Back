@@ -37,8 +37,8 @@ POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "email": "linkup.startups@gmail.com",
-  "password": "cotur2025"
+  "email":"linkup.startups@gmail.com",
+  "password":"cotur2025"
 }
 
 ### Update application status (Admin only)
