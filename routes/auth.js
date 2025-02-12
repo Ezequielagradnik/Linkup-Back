@@ -1,11 +1,17 @@
 import express from "express"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
+import crypto from "crypto"
 import { Application, User } from "../models/index.js"
 
 const router = express.Router()
 
-console.log("Registering /login route") 
+console.log("Registering /login route")
+
+// Helper function to check if a string is a valid MD5 hash
+function isMD5(str) {
+  return /^[a-f0-9]{32}$/i.test(str)
+}
 
 router.post("/login", async (req, res) => {
   try {
@@ -33,7 +39,17 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" })
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password)
+    let isPasswordValid = false
+
+    if (isMD5(user.password)) {
+      // If the stored password is an MD5 hash
+      const md5Hash = crypto.createHash("md5").update(password).digest("hex")
+      isPasswordValid = md5Hash === user.password
+    } else {
+      // If the stored password is a bcrypt hash (or any other format)
+      isPasswordValid = await bcrypt.compare(password, user.password)
+    }
+
     if (!isPasswordValid) {
       console.log(`Invalid password for email: ${email}`)
       return res.status(401).json({ error: "Invalid credentials" })

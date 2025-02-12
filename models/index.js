@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize"
-import pg from "pg" // Añadimos esta línea
+import pg from "pg"
 import UserModel from "./user.js"
 import ApplicationModel from "./application.js"
 import ModuleModel from "./module.js"
@@ -33,7 +33,7 @@ try {
     console.log("DATABASE_URL found. Initializing Sequelize with DATABASE_URL")
     sequelize = new Sequelize(process.env.DATABASE_URL, {
       dialect: "postgres",
-      dialectModule: pg, // Añadimos esta línea
+      dialectModule: pg,
       dialectOptions: {
         ssl: {
           require: true,
@@ -62,7 +62,7 @@ try {
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
       dialect: "postgres",
-      dialectModule: pg, // Añadimos esta línea
+      dialectModule: pg,
       dialectOptions: {
         ssl: {
           require: true,
@@ -106,6 +106,24 @@ const UserProgress = UserProgressModel(sequelize, Sequelize)
 console.log("UserProgress model initialized successfully")
 
 console.log("All models initialized successfully")
+
+// Define associations
+User.hasOne(Application, { foreignKey: "userId" })
+Application.belongsTo(User, { foreignKey: "userId" })
+
+User.hasMany(UserProgress, { foreignKey: "userId" })
+UserProgress.belongsTo(User, { foreignKey: "userId" })
+
+Module.hasMany(UserProgress, { foreignKey: "moduleId" })
+UserProgress.belongsTo(Module, { foreignKey: "moduleId" })
+
+console.log("Model associations defined")
+
+// Sync all models with the database
+sequelize
+  .sync({ alter: true })
+  .then(() => console.log("All models were synchronized successfully."))
+  .catch((error) => console.error("An error occurred while synchronizing the models:", error))
 
 console.log("Exporting initialized models and Sequelize instance")
 
