@@ -1,6 +1,6 @@
 @baseUrl = https://linkup-eta.vercel.app/api
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoibGlua3VwLnN0YXJ0dXBzQGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTczOTMyMDA3NCwiZXhwIjoxNzM5MzIzNjc0fQ.LC5RNVK6HvcnAZZp495uKfXAYKIf-lJk2oAK9cOif2A
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoibGlua3VwLnN0YXJ0dXBzQGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTczOTM2ODk5NCwiZXhwIjoxNzM5MzcyNTk0fQ.pwB2_eoX6b02yUViuThQb70boKoyQ5Lk_cZ0xblfS_Y
 
 http://localhost:3000
 
@@ -44,10 +44,10 @@ Content-Type: application/json
 }
 
 ### Update application status (Admin only)
-PUT {{baseUrl}}/admin/applications/1
+PUT {{baseUrl}}/admin/applications/11
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "status": "accepted"
+  "status": "rejected"
 }
