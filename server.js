@@ -6,11 +6,14 @@ import applicationRoutes from "./routes/apply.js"
 import adminRoutes from "./routes/admin.js"
 import dashboardRoutes from "./routes/dashboard.js"
 import cookieParser from "cookie-parser"
+import dotenv from "dotenv"
+
+dotenv.config()
+
 const app = express()
 
 console.log("Starting server initialization")
 
-// Improved CORS handling to include multiple origins
 const allowedOrigins = ["https://linkup-eta.vercel.app", "http://localhost:3000", process.env.CORS_ORIGIN].filter(
   Boolean,
 )
@@ -35,7 +38,6 @@ console.log("JSON body parser middleware configured")
 app.use(cookieParser())
 console.log("Cookie parser middleware configured")
 
-// Improved debug middleware
 app.use((req, res, next) => {
   const timestamp = new Date().toISOString()
   console.log(`[${timestamp}] ${req.method} ${req.originalUrl}`)
@@ -47,7 +49,6 @@ app.use((req, res, next) => {
 })
 console.log("Debug middleware configured")
 
-// Health check route
 app.get("/", (req, res) => {
   console.log("Health check route accessed")
   res.json({
@@ -58,7 +59,6 @@ app.get("/", (req, res) => {
   })
 })
 
-// Mounting routes with better error handling
 console.log("Mounting routes...")
 app.use("/api", authRoutes)
 app.use("/api/apply", applicationRoutes)
@@ -66,7 +66,6 @@ app.use("/api/admin", adminRoutes)
 app.use("/api/dashboard", dashboardRoutes)
 console.log("Routes mounted successfully")
 
-// Improved 404 handler
 app.use((req, res) => {
   console.log(`404: ${req.method} ${req.originalUrl} not found`)
   res.status(404).json({
@@ -80,13 +79,11 @@ app.use((req, res) => {
       "GET /api/users/profile",
       "PUT /api/admin/applications/:id",
       "GET /api/dashboard",
-      "POST /api/dashboard/update-progress"
-
+      "POST /api/dashboard/update-progress",
     ],
   })
 })
 
-// Improved error handler
 app.use((err, req, res, next) => {
   console.error("Global error handler caught an error:")
   console.error("Error name:", err.name)
@@ -112,7 +109,6 @@ async function startServer() {
     await sequelize.sync()
     console.log("Database synchronized successfully")
 
-    // Improved port handling for local development
     const server = app.listen(PORT, () => {
       const actualPort = server.address().port
       console.log(`Server running on port ${actualPort}`)
@@ -143,13 +139,11 @@ async function startServer() {
   }
 }
 
-// Conditional server start
 if (process.env.NODE_ENV !== "production") {
   console.log("Starting server in development mode...")
   startServer()
 } else {
   console.log("Server initialized for production mode")
-  // In production, we might want to start the server as well
   startServer()
 }
 
