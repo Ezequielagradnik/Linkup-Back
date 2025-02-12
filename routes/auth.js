@@ -5,9 +5,15 @@ import { Application, User } from "../models/index.js"
 
 const router = express.Router()
 
+console.log("Registering /login route") 
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" })
+    }
 
     console.log("Login attempt for email:", email)
 
@@ -42,9 +48,17 @@ router.post("/login", async (req, res) => {
       return res.status(500).json({ error: "Internal server error" })
     }
 
-    const token = jwt.sign({ userId: user.id, email: user.email, isAdmin }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    })
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        isAdmin,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      },
+    )
 
     console.log(isAdmin ? "Admin login successful" : "User login successful")
     return res.json({ token, isAdmin })

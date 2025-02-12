@@ -5,7 +5,7 @@ import authRoutes from "./routes/auth.js"
 import applicationRoutes from "./routes/apply.js"
 import adminRoutes from "./routes/admin.js"
 import dashboardRoutes from "./routes/dashboard.js"
-
+import cookieParser from "cookie-parser"
 const app = express()
 
 console.log("Starting server initialization")
@@ -32,6 +32,9 @@ console.log("CORS configured with allowed origins:", allowedOrigins)
 app.use(express.json())
 console.log("JSON body parser middleware configured")
 
+app.use(cookieParser())
+console.log("Cookie parser middleware configured")
+
 // Improved debug middleware
 app.use((req, res, next) => {
   const timestamp = new Date().toISOString()
@@ -57,7 +60,7 @@ app.get("/", (req, res) => {
 
 // Mounting routes with better error handling
 console.log("Mounting routes...")
-app.use("/api/login", authRoutes)
+app.use("/api", authRoutes)
 app.use("/api/apply", applicationRoutes)
 app.use("/api/admin", adminRoutes)
 app.use("/api/dashboard", dashboardRoutes)
