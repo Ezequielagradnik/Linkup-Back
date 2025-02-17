@@ -6,8 +6,10 @@ import applicationRoutes from "./routes/apply.js"
 import adminRoutes from "./routes/admin.js"
 import dashboardRoutes from "./routes/dashboard.js"
 import userProgressRoutes from "./routes/userProgress.js"
+import moduleRoutes from "./routes/moduleRoutes.js"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
+import { Module, Subtopic } from "./models/index.js"
 
 dotenv.config()
 
@@ -66,7 +68,23 @@ app.use("/api/apply", applicationRoutes)
 app.use("/api/admin", adminRoutes)
 app.use("/api/dashboard", dashboardRoutes)
 app.use("/api/progress", userProgressRoutes)
+app.use("/api", moduleRoutes)
 console.log("Routes mounted successfully")
+
+// New test route for fetching module data
+if (process.env.NODE_ENV === "development") {
+  app.get("/api/test-fetch-module", async (req, res) => {
+    try {
+      const module = await Module.findOne({
+        where: { order: 1 },
+        include: [{ model: Subtopic, as: "subtopics" }],
+      })
+      res.json(module)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  })
+}
 
 app.use((req, res) => {
   console.log(`404: ${req.method} ${req.originalUrl} not found`)
@@ -85,6 +103,12 @@ app.use((req, res) => {
       "GET /api/progress/:userId",
       "GET /api/progress/:userId/:moduleId",
       "PUT /api/progress/:userId/:moduleId",
+      "POST /api/modules",
+      "GET /api/modules",
+      "GET /api/modules/:id",
+      "PUT /api/modules/:id",
+      "DELETE /api/modules/:id",
+      "GET /api/test-fetch-module",
     ],
   })
 })
@@ -130,6 +154,12 @@ async function startServer() {
       console.log("- GET /api/progress/:userId")
       console.log("- GET /api/progress/:userId/:moduleId")
       console.log("- PUT /api/progress/:userId/:moduleId")
+      console.log("- POST /api/modules")
+      console.log("- GET /api/modules")
+      console.log("- GET /api/modules/:id")
+      console.log("- PUT /api/modules/:id")
+      console.log("- DELETE /api/modules/:id")
+      console.log("- GET /api/test-fetch-module")
     })
 
     server.on("error", (error) => {
@@ -156,3 +186,4 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export default app
+

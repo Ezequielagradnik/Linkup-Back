@@ -1,6 +1,6 @@
 import express from "express"
 import { Application } from "../models/index.js"
-import { sendApplicationEmail } from "../utils/email.js"
+import { sendApplicationEmail } from "../src/utils/email.js"
 
 const router = express.Router()
 
