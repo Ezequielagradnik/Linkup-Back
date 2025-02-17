@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.js"
 import applicationRoutes from "./routes/apply.js"
 import adminRoutes from "./routes/admin.js"
 import dashboardRoutes from "./routes/dashboard.js"
+import userProgressRoutes from "./routes/userProgress.js"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 
@@ -64,6 +65,7 @@ app.use("/api", authRoutes)
 app.use("/api/apply", applicationRoutes)
 app.use("/api/admin", adminRoutes)
 app.use("/api/dashboard", dashboardRoutes)
+app.use("/api/progress", userProgressRoutes)
 console.log("Routes mounted successfully")
 
 app.use((req, res) => {
@@ -80,6 +82,9 @@ app.use((req, res) => {
       "PUT /api/admin/applications/:id",
       "GET /api/dashboard",
       "POST /api/dashboard/update-progress",
+      "GET /api/progress/:userId",
+      "GET /api/progress/:userId/:moduleId",
+      "PUT /api/progress/:userId/:moduleId",
     ],
   })
 })
@@ -122,6 +127,9 @@ async function startServer() {
       console.log("- PUT /api/admin/applications/:id")
       console.log("- GET /api/dashboard")
       console.log("- POST /api/dashboard/update-progress")
+      console.log("- GET /api/progress/:userId")
+      console.log("- GET /api/progress/:userId/:moduleId")
+      console.log("- PUT /api/progress/:userId/:moduleId")
     })
 
     server.on("error", (error) => {
@@ -148,4 +156,3 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export default app
-

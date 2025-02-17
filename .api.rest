@@ -51,3 +51,35 @@ Content-Type: application/json
 {
   "status": "rejected"
 }
+### Get user progress
+GET {{baseUrl}}/progress/1
+Authorization: Bearer {{token}}
+
+### Get user progress for a specific module
+GET {{baseUrl}}/progress/1/1
+Authorization: Bearer {{token}}
+
+### Update user progress for a specific module
+PUT {{baseUrl}}/progress/1/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "progress": 75,
+  "currentModule": 1,
+  "completedModules": [1]
+}
+
+### Get dashboard data
+GET {{baseUrl}}/dashboard
+Authorization: Bearer {{token}}
+
+### Update dashboard progress
+POST {{baseUrl}}/dashboard/update-progress
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "moduleId": 1,
+  "progress": 50
+}
