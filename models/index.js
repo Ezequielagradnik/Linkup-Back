@@ -3,6 +3,7 @@ import pg from "pg"
 import UserModel from "./user.js"
 import ApplicationModel from "./application.js"
 import ModuleModel from "./module.js"
+import SubtopicModel from "./subtopic.js"
 import UserProgressModel from "./userProgress.js"
 import dotenv from "dotenv"
 import path from "path"
@@ -90,19 +91,23 @@ try {
 
 console.log("Initializing models...")
 console.log("Initializing User model...")
-const User = UserModel(sequelize, Sequelize)
+const User = UserModel(sequelize, Sequelize.DataTypes)
 console.log("User model initialized successfully")
 
 console.log("Initializing Application model...")
-const Application = ApplicationModel(sequelize, Sequelize)
+const Application = ApplicationModel(sequelize, Sequelize.DataTypes)
 console.log("Application model initialized successfully")
 
 console.log("Initializing Module model...")
-const Module = ModuleModel(sequelize, Sequelize)
+const Module = ModuleModel(sequelize, Sequelize.DataTypes)
 console.log("Module model initialized successfully")
 
+console.log("Initializing Subtopic model...")
+const Subtopic = SubtopicModel(sequelize, Sequelize.DataTypes)
+console.log("Subtopic model initialized successfully")
+
 console.log("Initializing UserProgress model...")
-const UserProgress = UserProgressModel(sequelize, Sequelize)
+const UserProgress = UserProgressModel(sequelize, Sequelize.DataTypes)
 console.log("UserProgress model initialized successfully")
 
 console.log("All models initialized successfully")
@@ -117,6 +122,9 @@ UserProgress.belongsTo(User, { foreignKey: "userId" })
 Module.hasMany(UserProgress, { foreignKey: "moduleId" })
 UserProgress.belongsTo(Module, { foreignKey: "moduleId" })
 
+Module.hasMany(Subtopic, { as: "subtopics", foreignKey: "moduleId" })
+Subtopic.belongsTo(Module, { foreignKey: "moduleId" })
+
 console.log("Model associations defined")
 
 // Sync all models with the database
@@ -127,5 +135,5 @@ sequelize
 
 console.log("Exporting initialized models and Sequelize instance")
 
-export { sequelize, User, Application, Module, UserProgress }
+export { sequelize, User, Application, Module, Subtopic, UserProgress }
 
