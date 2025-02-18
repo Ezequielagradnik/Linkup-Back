@@ -26,9 +26,13 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0,
     },
-    completedModules: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER),
+    completedSections: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
       defaultValue: [],
+    },
+    responses: {
+      type: DataTypes.JSONB,
+      defaultValue: {},
     },
   })
 
