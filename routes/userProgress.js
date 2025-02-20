@@ -1,10 +1,8 @@
-const express = require("express")
-const router = express.Router()
-const { UserProgress } = require("../models")
-const { User } = require("../models")
-const { Module } = require("../models")
-const { sequelize } = require("../models")
-const authenticateToken = require("../middleware/authenticateToken")
+import express from "express"
+import { UserProgress, User, Module } from "../models/index.js"
+import { sequelize } from "../models/index.js"
+import authenticateToken from "../middleware/auth.js"
+import router from "./auth.js"
 
 // Actualizar el progreso de un usuario en un módulo
 router.put("/:userId/:moduleId", authenticateToken, async (req, res) => {
