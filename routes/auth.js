@@ -23,40 +23,49 @@ router.post("/login", async (req, res) => {
 
     console.log("Login attempt for email:", email)
 
-    // First, try to find the user in the Users table (for admin users)
+    // First, check if it's an admin user
     let user = await User.findOne({ where: { email } })
     let isAdmin = false
 
-    // If not found in Users table, check the Application table
-    if (!user) {
-      user = await Application.findOne({ where: { email } })
-    } else {
+    if (user) {
       isAdmin = user.isAdmin
+    } else {
+      // If not an admin, check Applications table
+      const application = await Application.findOne({ where: { email } })
+
+      if (!application) {
+        console.log(`No application found for email: ${email}`)
+        return res.status(401).json({ error: "Invalid credentials" })
+      }
+
+      // Check application status first
+      if (application.status !== "accepted") {
+        console.log(`Application status for ${email} is: ${application.status}`)
+        return res.status(403).json({ 
+          error: "Application pending",
+          message: application.status === "pending" 
+            ? "Your application is still under review" 
+            : "Your application has been rejected"
+        })
+      }
+
+      // If application is accepted, use this as the user
+      user = application
     }
 
-    if (!user) {
-      console.log(`User not found for email: ${email}`)
-      return res.status(401).json({ error: "Invalid credentials" })
-    }
-
+    // At this point, we either have an admin user or an accepted applicant
     let isPasswordValid = false
 
     if (isMD5(user.password)) {
-      // If the stored password is an MD5 hash
       const md5Hash = crypto.createHash("md5").update(password).digest("hex")
       isPasswordValid = md5Hash === user.password
     } else {
-      // If the stored password is a bcrypt hash (or any other format)
       isPasswordValid = await bcrypt.compare(password, user.password)
     }
 
     if (!isPasswordValid) {
       console.log(`Invalid password for email: ${email}`)
       return res.status(401).json({ error: "Invalid credentials" })
-    }
-
-    if (!isAdmin && user.status !== "accepted") {
-      return res.status(403).json({ message: "Your application is still pending or has been rejected" })
     }
 
     if (!process.env.JWT_SECRET) {
@@ -69,6 +78,7 @@ router.post("/login", async (req, res) => {
         userId: user.id,
         email: user.email,
         isAdmin,
+        isApplicant: !isAdmin
       },
       process.env.JWT_SECRET,
       {
@@ -76,8 +86,18 @@ router.post("/login", async (req, res) => {
       },
     )
 
-    console.log(isAdmin ? "Admin login successful" : "User login successful")
-    return res.json({ token, isAdmin })
+    console.log(`Login successful for ${isAdmin ? 'admin' : 'accepted applicant'}:`, email)
+    return res.json({ 
+      token, 
+      isAdmin,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        status: isAdmin ? null : user.status
+      }
+    })
+
   } catch (error) {
     console.error("Login error:", error)
     res.status(500).json({ error: "Error during login", details: error.message })
@@ -85,4 +105,3 @@ router.post("/login", async (req, res) => {
 })
 
 export default router
-
