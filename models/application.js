@@ -94,6 +94,14 @@ export default (sequelize, DataTypes) => {
       },
     })
   
+    Application.associate = (models) => {
+      // Relación con UserProgress
+      Application.hasOne(models.UserProgress, {
+        foreignKey: "userId",
+        sourceKey: "userId",
+      })
+    }
+    
     return Application
   }
   

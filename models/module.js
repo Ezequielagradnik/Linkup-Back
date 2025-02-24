@@ -14,6 +14,11 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
     },
   })
+  Module.associate = (models) => {
+    Module.hasMany(models.UserProgress, {
+      foreignKey: "moduleId",
+    })
+  }
 
   return Module
 }

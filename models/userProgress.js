@@ -3,10 +3,6 @@ export default (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: "Users",
-        key: "id",
-      },
     },
     moduleId: {
       type: DataTypes.INTEGER,
@@ -37,8 +33,15 @@ export default (sequelize, DataTypes) => {
   })
 
   UserProgress.associate = (models) => {
-    UserProgress.belongsTo(models.User, { foreignKey: "userId" })
-    UserProgress.belongsTo(models.Module, { foreignKey: "moduleId" })
+    // Relación con Application
+    UserProgress.belongsTo(models.Application, {
+      foreignKey: "userId",
+      targetKey: "userId",
+    })
+    // Relación con Module
+    UserProgress.belongsTo(models.Module, {
+      foreignKey: "moduleId",
+    })
   }
 
   return UserProgress
