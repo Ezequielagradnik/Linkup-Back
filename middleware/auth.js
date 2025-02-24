@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { User, Application } from "../models/index.js"
+import { Application, User } from "../models/index.js" // Cambiado a Application
 
 export const authenticateToken = async (req, res, next) => {
   try {
@@ -28,31 +28,30 @@ export const authenticateToken = async (req, res, next) => {
       return next()
     }
 
-    // Si es aplicante, verificamos en la tabla Applications
+    // Si es aplicante, verificamos en la tabla Application
     if (decoded.isApplicant) {
       const applicant = await Application.findOne({
-        where: { userId: decoded.userId }
+        // Cambiado a Application
+        where: { userId: decoded.userId },
       })
-      
+
       if (!applicant) {
         console.log(`Authentication failed: Applicant not found for token ${token}`)
         return res.sendStatus(403)
       }
-      
-      req.user = { 
-        ...decoded, 
+
+      req.user = {
+        ...decoded,
         isAdmin: false,
         isApplicant: true,
-        application: applicant // Incluimos los datos de la aplicación
+        application: applicant,
       }
       console.log("Applicant authenticated:", req.user)
       return next()
     }
 
-    // Si no es ni admin ni aplicante, error
     console.log(`Authentication failed: Invalid user type in token ${token}`)
     return res.sendStatus(403)
-
   } catch (error) {
     console.error("Error in authentication middleware:", error)
     res.status(403).json({ error: "Invalid token" })
@@ -60,3 +59,4 @@ export const authenticateToken = async (req, res, next) => {
 }
 
 export default authenticateToken
+

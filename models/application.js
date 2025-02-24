@@ -95,7 +95,8 @@ export default (sequelize, DataTypes) => {
       },
     }, {
       timestamps: true, // Esto asegura que createdAt y updatedAt se manejen correctamente
-      freezeTableName: true // Esto evita que Sequelize modifique el nombre de la tabla
+      freezeTableName: true, // Esto evita que Sequelize modifique el nombre de la tabla
+      tableName: 'Applications', // Esto es para que la tabla se llame "Application" en la base de datos
     })
   
     Application.associate = (models) => {
