@@ -2,12 +2,13 @@ import express from "express"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 import crypto from "crypto"
-import { Application, User } from "../models/index.js" // Cambiado a Application
+import { Application, User } from "../models/index.js"
 
 const router = express.Router()
 
 console.log("Registering /login route")
 
+// Helper function to check if a string is a valid MD5 hash
 function isMD5(str) {
   return /^[a-f0-9]{32}$/i.test(str)
 }
@@ -33,12 +34,11 @@ router.post("/login", async (req, res) => {
       isAdmin = user.isAdmin
       console.log("User is admin:", isAdmin)
     } else {
-      // If not an admin, check Application table
+      // If not an admin, check Applications table
       console.log("Checking applications table...")
-      const application = await Application.findOne({
-        // Cambiado a Application
+      const application = await Application.findOne({ 
         where: { email },
-        raw: true,
+        raw: true
       })
 
       console.log("Application found:", application ? "Yes" : "No")
@@ -52,34 +52,37 @@ router.post("/login", async (req, res) => {
         return res.status(401).json({ error: "Invalid credentials" })
       }
 
+      // Check application status first
       if (application.status !== "accepted") {
         console.log(`Application status is ${application.status}, access denied`)
-        return res.status(403).json({
+        return res.status(403).json({ 
           error: "Application pending",
-          message:
-            application.status === "pending"
-              ? "Your application is still under review"
-              : "Your application has been rejected",
+          message: application.status === "pending" 
+            ? "Your application is still under review" 
+            : "Your application has been rejected"
         })
       }
 
+      // If application is accepted, use this as the user
       user = application
       console.log("Using accepted application as user")
     }
 
+    // Password validation
     console.log("Starting password validation")
     console.log("Stored password:", user.password)
-
+    
     let isPasswordValid = false
 
     if (isMD5(user.password)) {
       const md5Hash = crypto.createHash("md5").update(password).digest("hex")
       isPasswordValid = md5Hash === user.password
       console.log("MD5 validation result:", isPasswordValid)
-    } else if (user.password.length > 30) {
+    } else if (user.password.length > 30) { // Assuming bcrypt hashes are longer than 30 chars
       isPasswordValid = await bcrypt.compare(password, user.password)
       console.log("bcrypt validation result:", isPasswordValid)
     } else {
+      // Plain text password comparison
       isPasswordValid = password === user.password
       console.log("Plain text validation result:", isPasswordValid)
     }
@@ -99,7 +102,7 @@ router.post("/login", async (req, res) => {
         userId: user.id,
         email: user.email,
         isAdmin,
-        isApplicant: !isAdmin,
+        isApplicant: !isAdmin
       },
       process.env.JWT_SECRET,
       {
@@ -112,20 +115,21 @@ router.post("/login", async (req, res) => {
       isAdmin,
       userId: user.id,
       email: user.email,
-      name: isAdmin ? user.username : user.firstName,
-      status: isAdmin ? null : user.status,
+      name: user.name,
+      status: isAdmin ? null : user.status
     })
 
-    return res.json({
-      token,
+    return res.json({ 
+      token, 
       isAdmin,
       user: {
         id: user.id,
         email: user.email,
-        name: isAdmin ? user.username : user.firstName,
-        status: isAdmin ? null : user.status,
-      },
+        name: user.name,
+        status: isAdmin ? null : user.status
+      }
     })
+
   } catch (error) {
     console.error("Login error:", error)
     console.error("Error stack:", error.stack)
@@ -134,4 +138,3 @@ router.post("/login", async (req, res) => {
 })
 
 export default router
-
