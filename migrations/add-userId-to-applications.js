@@ -1,6 +1,6 @@
 export default {
     up: async (queryInterface, Sequelize) => {
-      await queryInterface.addColumn("Applications", "userId", {
+      await queryInterface.addColumn("Application", "userId", {
         type: Sequelize.INTEGER,
         allowNull: false,
         unique: true,
@@ -9,7 +9,7 @@ export default {
     },
   
     down: async (queryInterface, Sequelize) => {
-      await queryInterface.removeColumn("Applications", "userId")
+      await queryInterface.removeColumn("Application", "userId")
     },
   }
   
