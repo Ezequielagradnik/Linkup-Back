@@ -91,7 +91,11 @@ export default (sequelize, DataTypes) => {
       status: {
         type: DataTypes.ENUM("pending", "accepted", "rejected"),
         defaultValue: "pending",
+        allowNull: false
       },
+    }, {
+      timestamps: true, // Esto asegura que createdAt y updatedAt se manejen correctamente
+      freezeTableName: true // Esto evita que Sequelize modifique el nombre de la tabla
     })
   
     Application.associate = (models) => {
@@ -101,7 +105,7 @@ export default (sequelize, DataTypes) => {
         sourceKey: "userId",
       })
     }
-    
+
     return Application
   }
   
