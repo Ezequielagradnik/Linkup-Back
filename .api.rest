@@ -1,6 +1,6 @@
 @baseUrl = https://linkup-eta.vercel.app/api
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMwLCJlbWFpbCI6ImVkc2hlZXJhbkBnbWFpbC5jb20iLCJpc0FkbWluIjpmYWxzZSwiaXNBcHBsaWNhbnQiOnRydWUsImlhdCI6MTc0MDU3MDQ1OSwiZXhwIjoxNzQwNTc0MDU5fQ.-ZVnn5tmVwB9BHnihuu7pz-s477R8ogP99C2mlMEGJ0
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoibGlua3VwLnN0YXJ0dXBzQGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsImlzQXBwbGljYW50IjpmYWxzZSwiaWF0IjoxNzQwNjA2ODgwLCJleHAiOjE3NDA2MTA0ODB9.LLIAkyuHwGE_Ibj7Q4LFBxnRSKLl4SOZ6jhAvtwaTMw
 
 http://localhost:3000
 
@@ -39,12 +39,12 @@ POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "email":"edsheeran@gmail.com",
-  "password":"eed"
+  "email":"linkup.startups@gmail.com",
+  "password":"cotur2025"
 }
 
 ### Update application status (Admin only)
-PUT {{baseUrl}}/admin/applications/11
+PUT {{baseUrl}}/admin/applications/30
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
