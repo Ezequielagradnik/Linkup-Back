@@ -1,6 +1,7 @@
 import express from "express"
 import { authenticateToken } from "../middleware/auth.js"
 import { UserProgress, Module } from "../models/index.js"
+import { Application } from "../models/index.js"
 
 const router = express.Router()
 
@@ -20,7 +21,7 @@ router.get("/", authenticateToken, async (req, res) => {
 
     // Buscamos la aplicación por el ID del usuario autenticado
     const application = await Application.findOne({
-      where: { id: req.user.userId },
+      where: { id: req.user.id },
     })
 
     if (!application) {
