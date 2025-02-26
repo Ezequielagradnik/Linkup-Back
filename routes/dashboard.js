@@ -5,90 +5,96 @@ import { Application } from "../models/index.js"
 
 const router = express.Router()
 
-// Cambiamos la ruta para usar el ID del usuario autenticado
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    console.log("Dashboard request received, user data:", req.user)
+    console.log("1️⃣ Token user data:", req.user);
 
-    // Verificamos que tengamos el ID del usuario
-    if (!req.user || !req.user.userId) {
-      console.error("No user ID in request")
+    // Validar si req.user y userId están definidos
+    const userId = req.user?.userId;
+    if (!userId) {
+      console.error("❌ Error: userId es undefined o null", req.user);
       return res.status(401).json({
         message: "Unauthorized",
-        error: "No user ID available",
-      })
+        error: "No valid userId in request",
+      });
     }
 
-    // Buscamos la aplicación por el ID del usuario autenticado
+    console.log(`2️⃣ Buscando aplicación con userId: ${userId}`);
+
+    // Buscar la aplicación del usuario
     const application = await Application.findOne({
-      where: { id: req.user.id },
-    })
+      where: { userId: userId },
+    });
 
     if (!application) {
-      console.error("No application found for user ID:", req.user.userId)
+      console.error(`❌ No se encontró application para userId: ${userId}`);
       return res.status(404).json({
         message: "Application not found",
         error: "No application found for this user",
-      })
+      });
     }
 
-    console.log("Application found:", {
-      id: application.id,
-      firstName: application.firstName,
-      email: application.email,
-    })
+    console.log("✅ 3️⃣ Application encontrada:", JSON.stringify(application, null, 2));
 
-    // Buscamos el progreso del usuario
-    let userProgress
-    try {
-      userProgress = await UserProgress.findOne({
-        where: { userId: application.id },
-      })
-      console.log("User progress found:", userProgress)
-    } catch (error) {
-      console.error("Error finding user progress:", error)
-    }
+    // Buscar el progreso del usuario
+    let userProgress = await UserProgress.findOne({
+      where: { userId: userId },
+    });
 
-    // Si no hay progreso, usamos valores por defecto
     if (!userProgress) {
-      console.log("No progress found, using defaults")
-      userProgress = {
+      console.log("ℹ️ No se encontró progreso, creando nuevo...");
+      userProgress = await UserProgress.create({
+        userId: userId,
         currentModule: 1,
         progress: 0,
         completedSections: [],
         responses: {},
-      }
+      });
     }
 
-    // Buscamos los módulos
+    console.log("✅ 4️⃣ Progreso del usuario encontrado:", JSON.stringify(userProgress, null, 2));
+
+    // Buscar módulos ordenados
     const modules = await Module.findAll({
       order: [["order", "ASC"]],
-    })
-    console.log("Modules found:", modules.length)
+    });
 
+    console.log(`✅ 5️⃣ Se encontraron ${modules.length} módulos`);
+
+    // Construir respuesta segura
     const responseData = {
       user: {
-        id: application.id,
+        id: userId,
         name: application.firstName,
         email: application.email,
         currentModule: userProgress.currentModule,
         progress: userProgress.progress,
         completedModules: userProgress.completedSections || [],
+        startupName: application.startupName,
+        stage: application.stage,
       },
-      modules: modules,
-    }
+      modules: modules.map((m) => m.toJSON()), // Convertir a JSON plano
+    };
 
-    console.log("Sending response:", responseData)
-    res.json(responseData)
+    console.log("✅ 6️⃣ Enviando respuesta:", responseData);
+    res.json(responseData);
   } catch (error) {
-    console.error("Error in dashboard route:", error)
+    console.error("🔥 Error en /api/dashboard:", {
+      message: error.message,
+      stack: error.stack,
+      userId: req.user?.userId || "unknown",
+    });
+
     res.status(500).json({
       message: "Error fetching dashboard data",
       error: error.message,
-      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
-    })
+      debug: {
+        userId: req.user?.userId || "unknown",
+        timestamp: new Date().toISOString(),
+      },
+    });
   }
-})
+});
 
 router.post("/update-progress", authenticateToken, async (req, res) => {
   try {

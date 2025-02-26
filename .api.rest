@@ -1,6 +1,6 @@
 @baseUrl = https://linkup-eta.vercel.app/api
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoibGlua3VwLnN0YXJ0dXBzQGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsImlzQXBwbGljYW50IjpmYWxzZSwiaWF0IjoxNzQwNjA2ODgwLCJleHAiOjE3NDA2MTA0ODB9.LLIAkyuHwGE_Ibj7Q4LFBxnRSKLl4SOZ6jhAvtwaTMw
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiemVuZGEud2Vic2l0ZXNAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlzQXBwbGljYW50Ijp0cnVlLCJpYXQiOjE3NDA2MDc1NjYsImV4cCI6MTc0MDYxMTE2Nn0.dt6l86Axk9yCSOVvNjnq5MNUwcvWTZ6JSoyxOsfxR-k
 
 http://localhost:3000
 
@@ -39,17 +39,17 @@ POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "email":"linkup.startups@gmail.com",
-  "password":"cotur2025"
+  "email":"zenda.websites@gmail.com",
+  "password":"123"
 }
 
 ### Update application status (Admin only)
-PUT {{baseUrl}}/admin/applications/30
+PUT {{baseUrl}}/admin/applications/32
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "status": "rejected"
+  "status": "accepted"
 }
 
 
