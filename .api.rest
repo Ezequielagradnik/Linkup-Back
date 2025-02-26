@@ -86,4 +86,3 @@ Content-Type: application/json
   "progress": 50
 }
 
-### Get all users
