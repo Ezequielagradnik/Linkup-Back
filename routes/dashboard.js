@@ -5,9 +5,10 @@ import { Application } from "../models/index.js"
 
 const router = express.Router()
 
+
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    console.log("1️⃣ Token user data:", req.user);
+    console.log("1️⃣ Token user data:", JSON.stringify(req.user, null, 2));
 
     // Validar si req.user y userId están definidos
     const userId = req.user?.userId;
@@ -36,30 +37,67 @@ router.get("/", authenticateToken, async (req, res) => {
 
     console.log("✅ 3️⃣ Application encontrada:", JSON.stringify(application, null, 2));
 
-    // Buscar el progreso del usuario
-    let userProgress = await UserProgress.findOne({
-      where: { userId: userId },
-    });
-
-    if (!userProgress) {
-      console.log("ℹ️ No se encontró progreso, creando nuevo...");
-      userProgress = await UserProgress.create({
-        userId: userId,
-        currentModule: 1,
-        progress: 0,
-        completedSections: [],
-        responses: {},
-      });
-    }
-
-    console.log("✅ 4️⃣ Progreso del usuario encontrado:", JSON.stringify(userProgress, null, 2));
-
     // Buscar módulos ordenados
     const modules = await Module.findAll({
       order: [["order", "ASC"]],
     });
 
-    console.log(`✅ 5️⃣ Se encontraron ${modules.length} módulos`);
+    console.log(`✅ Se encontraron ${modules.length} módulos`);
+
+    if (modules.length === 0) {
+      console.error("❌ No se encontraron módulos en la base de datos");
+      return res.status(500).json({
+        message: "Error interno",
+        error: "No se encontraron módulos disponibles",
+      });
+    }
+
+    // Obtener el primer módulo
+    const firstModule = modules[0];
+    console.log("✅ Primer módulo encontrado:", JSON.stringify(firstModule, null, 2));
+
+    // Buscar el progreso del usuario
+    let userProgress = await UserProgress.findOne({
+      where: { userId: userId },
+    });
+
+    // Si no existe el progreso, lo creamos con el moduleId del primer módulo
+    if (!userProgress) {
+      console.log("ℹ️ No se encontró progreso, creando nuevo con moduleId:", firstModule.id);
+      
+      try {
+        // Verificar que el moduleId existe y es válido
+        if (!firstModule.id) {
+          throw new Error("El primer módulo no tiene un ID válido");
+        }
+        
+        // Crear el progreso del usuario con valores explícitos
+        userProgress = await UserProgress.create({
+          userId: userId,
+          moduleId: firstModule.id,
+          currentModule: 1,
+          progress: 0,
+          completedSections: [],
+          responses: {}
+        });
+        
+        console.log("✅ Nuevo progreso creado:", JSON.stringify(userProgress, null, 2));
+      } catch (createError) {
+        console.error("❌ Error al crear UserProgress:", createError.message, createError.stack);
+        return res.status(500).json({
+          message: "Error al crear progreso de usuario",
+          error: createError.message,
+          details: {
+            userId,
+            moduleId: firstModule?.id || "undefined",
+            firstModuleExists: !!firstModule,
+            modulesCount: modules.length
+          }
+        });
+      }
+    }
+
+    console.log("✅ 4️⃣ Progreso del usuario:", JSON.stringify(userProgress, null, 2));
 
     // Construir respuesta segura
     const responseData = {
@@ -76,7 +114,7 @@ router.get("/", authenticateToken, async (req, res) => {
       modules: modules.map((m) => m.toJSON()), // Convertir a JSON plano
     };
 
-    console.log("✅ 6️⃣ Enviando respuesta:", responseData);
+    console.log("✅ 6️⃣ Enviando respuesta:", JSON.stringify(responseData, null, 2));
     res.json(responseData);
   } catch (error) {
     console.error("🔥 Error en /api/dashboard:", {
@@ -95,6 +133,7 @@ router.get("/", authenticateToken, async (req, res) => {
     });
   }
 });
+
 
 router.post("/update-progress", authenticateToken, async (req, res) => {
   try {

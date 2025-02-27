@@ -16,6 +16,15 @@ export const authenticateToken = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
     console.log("Decoded token:", decoded)
 
+    // Verificar que el userId exista en el token
+    if (!decoded.userId) {
+      console.log("Authentication failed: No userId in token payload", decoded)
+      return res.status(401).json({
+        message: "Token inválido",
+        error: "El token no contiene un userId válido"
+      })
+    }
+
     // Si es admin, verificamos en la tabla Users
     if (decoded.isAdmin) {
       const adminUser = await User.findByPk(decoded.userId)
@@ -35,8 +44,11 @@ export const authenticateToken = async (req, res, next) => {
       })
       
       if (!applicant) {
-        console.log(`Authentication failed: Applicant not found for token ${token}`)
-        return res.sendStatus(403)
+        console.log(`Authentication failed: Applicant not found for userId: ${decoded.userId}`)
+        return res.status(403).json({
+          message: "Acceso denegado",
+          error: `No se encontró aplicante con userId: ${decoded.userId}`
+        })
       }
       
       req.user = { 
@@ -45,7 +57,10 @@ export const authenticateToken = async (req, res, next) => {
         isApplicant: true,
         application: applicant // Incluimos los datos de la aplicación
       }
-      console.log("Applicant authenticated:", req.user)
+      console.log("Applicant authenticated:", JSON.stringify({
+        userId: req.user.userId,
+        isApplicant: req.user.isApplicant
+      }))
       return next()
     }
 
@@ -54,8 +69,11 @@ export const authenticateToken = async (req, res, next) => {
     return res.sendStatus(403)
 
   } catch (error) {
-    console.error("Error in authentication middleware:", error)
-    res.status(403).json({ error: "Invalid token" })
+    console.error("Error in authentication middleware:", error.message, error.stack)
+    res.status(403).json({ 
+      message: "Error de autenticación", 
+      error: error.message 
+    })
   }
 }
 
