@@ -11,7 +11,7 @@ import setupRoutes from "./routes/setup.js"
 import adminModulesRoutes from "./routes/admin-modules.js"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
-import { Module, Subtopic } from "./models/index.js"
+import { Module } from "./models/index.js"
 
 dotenv.config()
 
