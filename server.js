@@ -7,6 +7,8 @@ import adminRoutes from "./routes/admin.js"
 import dashboardRoutes from "./routes/dashboard.js"
 import userProgressRoutes from "./routes/userProgress.js"
 import moduleRoutes from "./routes/moduleRoutes.js"
+import setupRoutes from "./routes/setup.js"
+import adminModulesRoutes from "./routes/admin-modules.js"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import { Module, Subtopic } from "./models/index.js"
@@ -69,6 +71,8 @@ app.use("/api/admin", adminRoutes)
 app.use("/api/dashboard", dashboardRoutes)
 app.use("/api/progress", userProgressRoutes)
 app.use("/api", moduleRoutes)
+app.use("/api", setupRoutes)
+app.use("/api", adminModulesRoutes)
 console.log("Routes mounted successfully")
 
 // New test route for fetching module data
@@ -108,6 +112,9 @@ app.use((req, res) => {
       "GET /api/modules/:id",
       "PUT /api/modules/:id",
       "DELETE /api/modules/:id",
+      "GET /api/setup/modules",
+      "POST /api/admin/modules/seed",
+      "GET /api/admin/modules",
       "GET /api/test-fetch-module",
     ],
   })
@@ -159,6 +166,9 @@ async function startServer() {
       console.log("- GET /api/modules/:id")
       console.log("- PUT /api/modules/:id")
       console.log("- DELETE /api/modules/:id")
+      console.log("- GET /api/setup/modules")
+      console.log("- POST /api/admin/modules/seed")
+      console.log("- GET /api/admin/modules")
       console.log("- GET /api/test-fetch-module")
     })
 
@@ -186,4 +196,3 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export default app
-

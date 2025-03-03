@@ -86,3 +86,22 @@ Content-Type: application/json
   "progress": 50
 }
 
+### Seed Module 1 to database (Admin only)
+POST {{baseUrl}}/admin/modules/seed
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "forceReplace": true
+}
+
+### Get all modules (Admin only)
+GET {{baseUrl}}/admin/modules
+Authorization: Bearer {{token}}
+
+### Setup modules (Development only)
+GET {{baseUrl}}/setup/modules
+
+### Get module by ID
+GET {{baseUrl}}/modules/1
+Authorization: Bearer {{token}}

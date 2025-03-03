@@ -13,6 +13,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+     content: {
+      type: DataTypes.JSON,
+      allowNull: true, // Hacemos este campo opcional para compatibilidad
+    }
   })
   Module.associate = (models) => {
     Module.hasMany(models.UserProgress, {
