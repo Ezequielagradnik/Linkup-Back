@@ -1,6 +1,6 @@
 @baseUrl = https://linkup-eta.vercel.app/api
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiemVuZGEud2Vic2l0ZXNAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlzQXBwbGljYW50Ijp0cnVlLCJpYXQiOjE3NDEwOTQ0NTEsImV4cCI6MTc0MTA5ODA1MX0.Jizo0gx98XV_YW3Wg9aW5qbuh3aC_mW0RPfw1Shuh2I
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiemVuZGEud2Vic2l0ZXNAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlzQXBwbGljYW50Ijp0cnVlLCJpYXQiOjE3NDExMTY3NzksImV4cCI6MTc0MTEyMDM3OX0.HK0rTCZt144GjWIBlHvD-4w5tJDwaqKKpALsVTYZK7Y
 
 http://localhost:3000
 
@@ -123,3 +123,23 @@ Content-Type: application/json
     "exercise": "Mi respuesta al ejercicio de la sección 1.2"
   }
 }
+
+
+### NUEVA RUTA ESPECÍFICA: Get current user progress for a specific module
+GET {{baseUrl}}/progress/module/1
+Authorization: Bearer {{token}}
+
+### NUEVA RUTA ESPECÍFICA: Update current user progress for a specific module
+PUT {{baseUrl}}/progress/module/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "progress": 25,
+  "completedSections": ["1.1"],
+  "sectionId": "1.1",
+  "responses": {
+    "exercise": "Mi respuesta al ejercicio de la sección 1.1"
+  }
+}
+

@@ -7,10 +7,6 @@ export default (sequelize, DataTypes) => {
     moduleId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: "Modules",
-        key: "id",
-      },
     },
     currentModule: {
       type: DataTypes.INTEGER,
@@ -32,15 +28,20 @@ export default (sequelize, DataTypes) => {
     },
   })
 
+  // Modificamos la asociación para que sea más explícita y no cause problemas
   UserProgress.associate = (models) => {
-    // Relación con Application
-    UserProgress.belongsTo(models.Application, {
-      foreignKey: "userId",
-      targetKey: "userId",
-    })
     // Relación con Module
     UserProgress.belongsTo(models.Module, {
       foreignKey: "moduleId",
+    })
+
+    // Relación con User - IMPORTANTE: NO incluir atributos que no existen
+    UserProgress.belongsTo(models.User, {
+      foreignKey: "userId",
+      // Especificar exactamente qué atributos queremos
+      scope: {
+        attributes: ["id", "username", "email", "isAdmin"],
+      },
     })
   }
 
