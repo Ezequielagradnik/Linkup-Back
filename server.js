@@ -9,7 +9,6 @@ import userProgressRoutes from "./routes/userProgress.js"
 import moduleRoutes from "./routes/moduleRoutes.js"
 import setupRoutes from "./routes/setup.js"
 import adminModulesRoutes from "./routes/admin-modules.js"
-import progressRoutes from "./routes/progress.js" // Asegúrate de importar progressRoutes
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import { Module } from "./models/index.js"
@@ -41,7 +40,6 @@ app.use(
 )
 console.log("CORS configured with allowed origins:", allowedOrigins)
 
-// Resto de tu configuración de middleware
 app.use(express.json())
 console.log("JSON body parser middleware configured")
 
@@ -59,7 +57,6 @@ app.use((req, res, next) => {
 })
 console.log("Debug middleware configured")
 
-// Tus rutas y el resto del código...
 app.get("/", (req, res) => {
   console.log("Health check route accessed")
   res.json({
@@ -73,6 +70,10 @@ app.get("/", (req, res) => {
 console.log("Mounting routes...")
 // IMPORTANTE: Registrar userProgressRoutes ANTES de otras rutas que puedan tener patrones similares
 // Esto asegura que las rutas específicas como /api/progress/module/:moduleId tengan prioridad
+
+if (progressRoutes) {
+  app.use("/api", userProgressRoutes)
+}
 app.use("/api/progress", userProgressRoutes)
 
 // Resto de rutas
@@ -84,12 +85,6 @@ app.use("/api", moduleRoutes)
 app.use("/api", setupRoutes)
 app.use("/api", adminModulesRoutes)
 
-// Si tienes progressRoutes, asegúrate de registrarlo DESPUÉS de userProgressRoutes
-// para evitar conflictos de rutas
-if (progressRoutes) {
-  app.use("/api", progressRoutes)
-}
-
 console.log("Routes mounted successfully")
 
 // New test route for fetching module data
@@ -99,7 +94,7 @@ if (process.env.NODE_ENV === "development") {
       const module = await Module.findOne({
         where: { order: 1 },
         // Verifica si Subtopic está definido antes de incluirlo
-        include: [{ model: sequelize.models.Subtopic, as: "subtopics" }].filter(Boolean),
+        include: sequelize.models.Subtopic ? [{ model: sequelize.models.Subtopic, as: "subtopics" }] : [],
       })
       res.json(module)
     } catch (error) {
