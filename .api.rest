@@ -1,6 +1,6 @@
 @baseUrl = https://linkup-eta.vercel.app/api
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiemVuZGEud2Vic2l0ZXNAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlzQXBwbGljYW50Ijp0cnVlLCJpYXQiOjE3NDEwMzMxODUsImV4cCI6MTc0MTAzNjc4NX0.LG1sZja0Wny6bCEmTuMP6PL6aL3GTEiIWO1HEu0Fc2c
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiemVuZGEud2Vic2l0ZXNAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlzQXBwbGljYW50Ijp0cnVlLCJpYXQiOjE3NDEwOTQ0NTEsImV4cCI6MTc0MTA5ODA1MX0.Jizo0gx98XV_YW3Wg9aW5qbuh3aC_mW0RPfw1Shuh2I
 
 http://localhost:3000
 
@@ -105,3 +105,21 @@ GET {{baseUrl}}/setup/modules
 ### Get module by ID
 GET {{baseUrl}}/modules/1
 Authorization: Bearer {{token}}
+
+### Get user progress for a specific module (specific user)
+GET {{baseUrl}}/progress/3/1
+Authorization: Bearer {{token}}
+
+### Update user progress for a specific module (specific user)
+PUT {{baseUrl}}/progress/3/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "progress": 75,
+  "completedSections": ["1.1", "1.2"],
+  "sectionId": "1.2",
+  "responses": {
+    "exercise": "Mi respuesta al ejercicio de la sección 1.2"
+  }
+}
