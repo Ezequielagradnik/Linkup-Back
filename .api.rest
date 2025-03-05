@@ -92,7 +92,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "forceReplace": true
+  "forceReplace": true,
+  "debug": true
 }
 
 ### Get all modules (Admin only)
