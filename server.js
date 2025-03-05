@@ -19,12 +19,9 @@ const app = express()
 
 console.log("Starting server initialization")
 
-const allowedOrigins = [
-  "https://linkup-eta.vercel.app",
-  "http://localhost:3000",
-  "https://linkupstartups.com",
-  process.env.CORS_ORIGIN,
-].filter(Boolean)
+const allowedOrigins = ["https://linkup-eta.vercel.app", "http://localhost:3000","https://linkupstartups.com", process.env.CORS_ORIGIN].filter(
+  Boolean,
+)
 
 app.use(
   cors({
@@ -68,23 +65,14 @@ app.get("/", (req, res) => {
 })
 
 console.log("Mounting routes...")
-// IMPORTANTE: Registrar userProgressRoutes ANTES de otras rutas que puedan tener patrones similares
-// Esto asegura que las rutas específicas como /api/progress/module/:moduleId tengan prioridad
-
-if (progressRoutes) {
-  app.use("/api", userProgressRoutes)
-}
-app.use("/api/progress", userProgressRoutes)
-
-// Resto de rutas
 app.use("/api", authRoutes)
 app.use("/api/apply", applicationRoutes)
 app.use("/api/admin", adminRoutes)
 app.use("/api/dashboard", dashboardRoutes)
+app.use("/api/progress", userProgressRoutes)
 app.use("/api", moduleRoutes)
 app.use("/api", setupRoutes)
 app.use("/api", adminModulesRoutes)
-
 console.log("Routes mounted successfully")
 
 // New test route for fetching module data
@@ -93,8 +81,7 @@ if (process.env.NODE_ENV === "development") {
     try {
       const module = await Module.findOne({
         where: { order: 1 },
-        // Verifica si Subtopic está definido antes de incluirlo
-        include: sequelize.models.Subtopic ? [{ model: sequelize.models.Subtopic, as: "subtopics" }] : [],
+        include: [{ model: Subtopic, as: "subtopics" }],
       })
       res.json(module)
     } catch (error) {
@@ -103,38 +90,33 @@ if (process.env.NODE_ENV === "development") {
   })
 }
 
-// Actualizar la lista de rutas disponibles
-const availableRoutes = [
-  "POST /api/apply",
-  "GET /api/admin/applications",
-  "POST /api/login",
-  "GET /api/users/profile",
-  "PUT /api/admin/applications/:id",
-  "GET /api/dashboard",
-  "POST /api/dashboard/update-progress",
-  "GET /api/progress/:userId",
-  "GET /api/progress/:userId/:moduleId",
-  "PUT /api/progress/:userId/:moduleId",
-  "GET /api/progress/module/:moduleId", // Nueva ruta específica
-  "PUT /api/progress/module/:moduleId", // Nueva ruta específica
-  "POST /api/modules",
-  "GET /api/modules",
-  "GET /api/modules/:id",
-  "PUT /api/modules/:id",
-  "DELETE /api/modules/:id",
-  "GET /api/setup/modules",
-  "POST /api/admin/modules/seed",
-  "GET /api/admin/modules",
-  "GET /api/test-fetch-module",
-]
-
 app.use((req, res) => {
   console.log(`404: ${req.method} ${req.originalUrl} not found`)
   res.status(404).json({
     error: `Route not found`,
     method: req.method,
     path: req.originalUrl,
-    availableRoutes,
+    availableRoutes: [
+      "POST /api/apply",
+      "GET /api/admin/applications",
+      "POST /api/login",
+      "GET /api/users/profile",
+      "PUT /api/admin/applications/:id",
+      "GET /api/dashboard",
+      "POST /api/dashboard/update-progress",
+      "GET /api/progress/:userId",
+      "GET /api/progress/:userId/:moduleId",
+      "PUT /api/progress/:userId/:moduleId",
+      "POST /api/modules",
+      "GET /api/modules",
+      "GET /api/modules/:id",
+      "PUT /api/modules/:id",
+      "DELETE /api/modules/:id",
+      "GET /api/setup/modules",
+      "POST /api/admin/modules/seed",
+      "GET /api/admin/modules",
+      "GET /api/test-fetch-module",
+    ],
   })
 })
 
@@ -168,7 +150,26 @@ async function startServer() {
       console.log(`Server running on port ${actualPort}`)
       console.log(`Environment: ${process.env.NODE_ENV}`)
       console.log("Available routes:")
-      availableRoutes.forEach((route) => console.log(`- ${route}`))
+      console.log("- POST /api/apply")
+      console.log("- GET /api/admin/applications")
+      console.log("- POST /api/login")
+      console.log("- POST /api/admin/login")
+      console.log("- GET /api/users/profile")
+      console.log("- PUT /api/admin/applications/:id")
+      console.log("- GET /api/dashboard")
+      console.log("- POST /api/dashboard/update-progress")
+      console.log("- GET /api/progress/:userId")
+      console.log("- GET /api/progress/:userId/:moduleId")
+      console.log("- PUT /api/progress/:userId/:moduleId")
+      console.log("- POST /api/modules")
+      console.log("- GET /api/modules")
+      console.log("- GET /api/modules/:id")
+      console.log("- PUT /api/modules/:id")
+      console.log("- DELETE /api/modules/:id")
+      console.log("- GET /api/setup/modules")
+      console.log("- POST /api/admin/modules/seed")
+      console.log("- GET /api/admin/modules")
+      console.log("- GET /api/test-fetch-module")
     })
 
     server.on("error", (error) => {
@@ -195,4 +196,3 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export default app
-
