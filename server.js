@@ -12,6 +12,7 @@ import adminModulesRoutes from "./routes/admin-modules.js"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import { Module } from "./models/index.js"
+import debugRoutes from "./routes/debug.js"
 
 dotenv.config()
 
@@ -73,6 +74,8 @@ app.use("/api/progress", userProgressRoutes)
 app.use("/api", moduleRoutes)
 app.use("/api", setupRoutes)
 app.use("/api", adminModulesRoutes)
+app.use("/api", debugRoutes)
+
 console.log("Routes mounted successfully")
 
 // New test route for fetching module data
@@ -115,7 +118,9 @@ app.use((req, res) => {
       "GET /api/setup/modules",
       "POST /api/admin/modules/seed",
       "GET /api/admin/modules",
-      "GET /api/test-fetch-module",
+      "GET /api/test-fetch-module", 
+      "GET /api/admin/modules",
+      "GET /api/debug/modules", // Nueva ruta de diagnóstico
     ],
   })
 })

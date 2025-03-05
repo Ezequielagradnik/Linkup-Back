@@ -2,6 +2,7 @@ import express from "express"
 import { authenticateToken } from "../middleware/auth.js"
 import { Module } from "../models/index.js"
 import { module1 } from "../data/module1.js"
+import { module2 } from "../data/module2.js"
 
 const router = express.Router()
 
@@ -12,17 +13,21 @@ router.post("/admin/modules/seed", authenticateToken, async (req, res) => {
       return res.status(403).json({ message: "Acceso denegado. Se requieren permisos de administrador." })
     }
 
-    const modules = [
-      module1,
-      // Aquí se añadirían los demás módulos cuando estén disponibles
-    ]
+    const modules = [module1, module2]
+
+    console.log(
+      `Intentando crear ${modules.length} módulos:`,
+      modules.map((m) => m.title),
+    )
 
     // Verificar si ya existen módulos
     const existingCount = await Module.count()
+    console.log(`Módulos existentes: ${existingCount}`)
 
     // Eliminar módulos existentes si se solicita
     if (req.body.forceReplace && existingCount > 0) {
       await Module.destroy({ where: {} })
+      console.log("Módulos existentes eliminados")
     } else if (existingCount > 0) {
       return res.status(400).json({
         message: "Ya existen módulos en la base de datos",
@@ -33,6 +38,7 @@ router.post("/admin/modules/seed", authenticateToken, async (req, res) => {
 
     // Crear nuevos módulos
     const createdModules = await Module.bulkCreate(modules)
+    console.log(`Módulos creados: ${createdModules.length}`)
 
     res.json({
       message: `${createdModules.length} módulos creados exitosamente`,
@@ -43,6 +49,7 @@ router.post("/admin/modules/seed", authenticateToken, async (req, res) => {
     res.status(500).json({
       message: "Error al crear módulos",
       error: error.message,
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
     })
   }
 })

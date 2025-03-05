@@ -1,6 +1,6 @@
 @baseUrl = https://linkup-eta.vercel.app/api
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiemVuZGEud2Vic2l0ZXNAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlzQXBwbGljYW50Ijp0cnVlLCJpYXQiOjE3NDExMTY3NzksImV4cCI6MTc0MTEyMDM3OX0.HK0rTCZt144GjWIBlHvD-4w5tJDwaqKKpALsVTYZK7Y
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoibGlua3VwLnN0YXJ0dXBzQGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsImlzQXBwbGljYW50IjpmYWxzZSwiaWF0IjoxNzQxMTkxNDA1LCJleHAiOjE3NDExOTUwMDV9.1h2vFVmbLjrFiA9P1FQq6cMLkdGsyTHp-LQr80PIHLE
 
 http://localhost:3000
 
@@ -39,8 +39,8 @@ POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "email":"zenda.websites@gmail.com",
-  "password":"123"
+  "email":"linkup.startups@gmail.com",
+  "password":"cotur2025"
 }
 
 ### Update application status (Admin only)
@@ -86,7 +86,7 @@ Content-Type: application/json
   "progress": 50
 }
 
-### Seed Module 1 to database (Admin only)
+### Seed Modules to database (Admin only)
 POST {{baseUrl}}/admin/modules/seed
 Authorization: Bearer {{token}}
 Content-Type: application/json
@@ -124,22 +124,6 @@ Content-Type: application/json
   }
 }
 
-
-### NUEVA RUTA ESPECÍFICA: Get current user progress for a specific module
+### Obtener el progreso del usuario actual en un módulo específico
 GET {{baseUrl}}/progress/module/1
 Authorization: Bearer {{token}}
-
-### NUEVA RUTA ESPECÍFICA: Update current user progress for a specific module
-PUT {{baseUrl}}/progress/module/1
-Authorization: Bearer {{token}}
-Content-Type: application/json
-
-{
-  "progress": 25,
-  "completedSections": ["1.1"],
-  "sectionId": "1.1",
-  "responses": {
-    "exercise": "Mi respuesta al ejercicio de la sección 1.1"
-  }
-}
-

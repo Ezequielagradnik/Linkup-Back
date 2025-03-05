@@ -1,14 +1,14 @@
 import { Module } from "../models/index.js"
 import { module1 } from "../data/module1.js"
+import { module2 } from "../data/module2.js"
 
 // Aquí importarías los demás módulos cuando estén disponibles
-// import { module2 } from '../data/module2.js'
 // import { module3 } from '../data/module3.js'
 // etc.
 
 const modules = [
   module1,
-  // module2,
+  module2,
   // module3,
   // etc.
 ]

@@ -1,6 +1,7 @@
 import express from "express"
 import { Module } from "../models/index.js"
 import { module1 } from "../data/module1.js"
+import { module2 } from "../data/module2.js"
 
 const router = express.Router()
 
@@ -19,6 +20,7 @@ router.get("/setup/modules", async (req, res) => {
 
     const modules = [
       module1,
+      module2,
       // Aquí se añadirían los demás módulos cuando estén disponibles
     ]
 
