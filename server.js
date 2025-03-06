@@ -20,7 +20,11 @@ const app = express()
 
 console.log("Starting server initialization")
 
-const allowedOrigins = ["https://linkup-eta.vercel.app", "http://localhost:3000","https://linkupstartups.com", process.env.CORS_ORIGIN].filter(
+const allowedOrigins = ["https://linkup-eta.vercel.app",
+"http://localhost:3000",
+"https://linkupstartups.com", "https://www.linkupstartups.com",
+
+"https://www.linkupstartups.com/dashboard", process.env.CORS_ORIGIN].filter(
   Boolean,
 )
 
