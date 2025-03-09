@@ -97,10 +97,6 @@ Content-Type: application/json
 }
 
 
-### Get module by ID
-GET {{baseUrl}}/modules/1
-Authorization: Bearer {{token}}
-
 ### Get user progress for a specific module (specific user)
 GET {{baseUrl}}/progress/3/1
 Authorization: Bearer {{token}}
